@@ -1,63 +1,59 @@
-import numpy as np
 from PIL import Image
-# 1
-inicjaly = Image.open("obraz.bmp")
-inicjaly.show()
-
-# 2
-print("---------- informacje o obrazie")
-print("tryb:", inicjaly.mode)
-print("format:", inicjaly.format)
-print("rozmiar:", inicjaly.size)
-print(" ")
-
-# 3
-dane_obrazka = np.asarray(inicjaly)
-
-dane_obrazka1 = dane_obrazka * 1
-ob_d1 = Image.fromarray(dane_obrazka1)
-
-inicjaly_text = open('inicjaly.txt', 'w')
-
-t2_text = open('inicjaly.txt', 'w')
-for rows in dane_obrazka1:
-    for item in rows:
-        t2_text.write(str(item) + ' ')
-    t2_text.write('\n')
-t2_text.close()
-
-#4a
-t1 = np.loadtxt("inicjaly.txt")
-print("typ danych tablicy inicjaly:", t1.dtype)
-print("rozmiar tablicy inicjaly :", t1.shape)
-print("rozmiar tablicy inicjaly :", t1.size)
-print("wymiar tablicy inicjaly :", t1.ndim)
-print("rozmiar wyrazu wyrazu :", t1.itemsize)
-print("=============================")
-
-#4b
-print("pierwszy:", t1[30][50])
-print("drugi:", t1[40][90])
-print("trzeci:", t1[0][99])
-print("============================")
-
-t2 = np.loadtxt("inicjaly.txt", dtype=np.bool_)
-t3 = np.loadtxt("inicjaly.txt", dtype=np.uint8)
+import numpy as np
 
 
-print("informacje o tablicy bool:")
-print("==========================")
-print("typ danych tablicy inicjaly:", t2.dtype)
-print("rozmiar tablicy inicjaly :", t2.shape)
-print("rozmiar tablicy inicjaly :", t2.size)
-print("wymiar tablicy inicjaly :", t2.ndim)
-print("rozmiar wyrazu wyrazu :", t2.itemsize)
-print("=========================")
-print("informacje o tablicy uint8:")
-print("=========================")
-print("typ danych tablicy inicjaly:", t3.dtype)
-print("rozmiar tablicy inicjaly :", t3.shape)
-print("rozmiar tablicy inicjaly :", t3.size)
-print("wymiar tablicy inicjaly :", t3.ndim)
-print("rozmiar wyrazu wyrazu :", t3.itemsize)
-print("========================")
+#zadanie 1
+
+
+
+
+def foo3(w, h, m, n,grub,kolor,kolor1):
+    t = (h, w)
+    tab = np.ones(t, dtype=np.uint8) * 255
+    ile = int(w / grub)
+    for k in range(ile):
+        for i in range(n):
+            for j in range(m):
+                tab[i][j] = (k + kolor) % 256
+        for i in range(n,h):
+            for j in range(m,w):
+                tab[i][j] = (k + kolor1) % 256
+        return Image.fromarray(tab)
+
+obraz313 = foo3(480, 320, 100, 50,10,100,0)
+obraz313.save("obraz313.bmp")
+obraz313.show()
+
+def negatyw_szare(obraz):
+    tab = np.asarray(obraz)
+    h, w = tab.shape
+    tab_neg = tab.copy()
+    for i in range(h):
+        for j in range(w):
+            tab_neg[i, j] = 255 - tab[i, j]
+    return Image.fromarray(tab_neg)
+
+obr_N = negatyw_szare(obraz313)
+obr_N.show()
+
+def inicjaly_paski_rbg(grub, obraz):
+    tab = np.asarray(obraz) * 255
+    h, w = tab.shape
+    ile = int(w / grub)
+    for k in range(ile):
+        for g in range(grub):
+            j = k * grub + g
+            for i in range(h):
+                if k % 3 == 0:
+                    tab[i, j] = [255, 0, 0]
+                elif k % 3 == 1:
+                    tab[i, j] = [0, 255, 0]
+                else:
+                    tab[i, j] = [0, 0, 255]
+    return Image.fromarray(tab)
+
+
+obraz = Image.open('inicjaly.bmp')
+obr5 = inicjaly_paski_rbg(5, obraz)
+obr5.show()
+
